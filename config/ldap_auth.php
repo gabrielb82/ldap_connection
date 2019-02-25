@@ -105,24 +105,89 @@ return [
 
     'usernames' => [
 
+        /*
+        |--------------------------------------------------------------------------
+        | LDAP
+        |--------------------------------------------------------------------------
+        |
+        | Discover:
+        |
+        |   The discover value is the users attribute you would
+        |   like to locate LDAP users by in your directory.
+        |
+        |   For example, using the default configuration below, if you're
+        |   authenticating users with an email address, your LDAP server
+        |   will be queried for a user with the a `userprincipalname`
+        |   equal to the entered email address.
+        |
+        | Authenticate:
+        |
+        |   The authenticate value is the users attribute you would
+        |   like to use to bind to your LDAP server.
+        |
+        |   For example, when a user is located by the above 'discover'
+        |   attribute, the users attribute you specify below will
+        |   be used as the username to bind to your LDAP server.
+        |
+        */
+
         'ldap' => [
 
-            // replace this line:
-            // 'discover' => 'userprincipalname',
-            // with this one:
             'discover' => env('LDAP_USER_ATTRIBUTE', 'userprincipalname'),
 
-            // replace this line:
-            // 'authenticate' => 'distinguishedname',
-            // with this one:
             'authenticate' => env('LDAP_USER_ATTRIBUTE', 'distinguishedname'),
 
         ],
 
-        // replace this line:
-        // 'eloquent' => 'email',
-        // with this one:
+        /*
+        |--------------------------------------------------------------------------
+        | Eloquent
+        |--------------------------------------------------------------------------
+        |
+        | The value you enter is the database column name used for locating
+        | the local database record of the authenticating user.
+        |
+        | If you're using a `username` column instead, change this to `username`.
+        |
+        | This option is only applicable to the DatabaseUserProvider.
+        |
+        */
+
         'eloquent' => 'username',
+
+        /*
+        |--------------------------------------------------------------------------
+        | Windows Authentication Middleware (SSO)
+        |--------------------------------------------------------------------------
+        |
+        | Discover:
+        |
+        |   The 'discover' value is the users attribute you would
+        |   like to locate LDAP users by in your directory.
+        |
+        |   For example, if 'samaccountname' is the value, then your LDAP server is
+        |   queried for a user with the 'samaccountname' equal to the value of
+        |   $_SERVER['AUTH_USER'].
+        |
+        |   If a user is found, they are imported (if using the DatabaseUserProvider)
+        |   into your local database, then logged in.
+        |
+        | Key:
+        |
+        |    The 'key' value represents the 'key' of the $_SERVER
+        |    array to pull the users account name from.
+        |
+        |    For example, $_SERVER['AUTH_USER'].
+        |
+        */
+
+        'windows' => [
+
+            'discover' => 'samaccountname',
+
+            'key' => 'AUTH_USER',
+
+        ],
 
     ],
 
@@ -206,10 +271,11 @@ return [
     */
 
     'sync_attributes' => [
-        // 'field_in_local_db' => 'attribute_in_ldap_server',
+
         'username' => 'uid', // was 'email' => 'userprincipalname',
         'name' => 'cn',
         'phone' => 'telephonenumber',
+
     ],
 
     /*
